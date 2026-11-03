@@ -1,36 +1,48 @@
 
 <script setup lang="ts">
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
 defineOptions({
     layout: CustomerLayout
 })
-
 interface OrderItem {
+    date_created: string
     item_name: string
     quantity: number
     amount: number
+    total: number
+    initial_amount: number
+    user_id: number
+
 }
 
 const form = useForm({
-    date: new Date().toISOString().split('T')[0],
+    date_created: new Date().toISOString().split('T')[0],
     items: [
         {
+            date_created: new Date().toISOString().split('T')[0],
             item_name: '',
             quantity: 1,
-            amount: 0
+            amount: 0,
+            total: 0,
+            initial_amount: 0,
+            user_id: 1
         }
-    ] as OrderItem[]
+    ] as unknown as OrderItem[]
 })
 
 // Add another item
 const addOrder = () => {
     form.items.push({
+        date_created: new Date().toISOString().split('T')[0],
         item_name: '',
         quantity: 1,
-        amount: 0
+        amount: 0,
+        total: 0,
+        initial_amount: 0,
+        user_id: 1,
     })
 }
 
@@ -49,7 +61,7 @@ const getItemTotal = (item: OrderItem) => {
 // Calculate grand total
 const grandTotal = computed(() => {
     return form.items.reduce((total, item) => {
-        return total + getItemTotal(item)
+        return total + item.total
     }, 0)
 })
 
@@ -59,22 +71,38 @@ const formatCurrency = (amount: number) => {
         currency: 'PHP'
     }).format(amount)
 }
+watch(
+    form.items,
+    (items) => {
+        items.forEach((item) => {
+            item.total = item.quantity * item.amount
+        })
+    },
+    { deep: true }
+)
+
 
 // Submit all items together
 const submit = () => {
-    form.post('/customer/orders', {
+    form.post('/customer/orders', 
+    {
         onSuccess: () => {
+            console.log('Order successfully submitted!'),
             form.reset()
+        },
+        onError: (errors) => {
+            console.log('Validation errors:', errors)
         }
-    })
+    }
+)
 }
 </script>
 
 <template>
-    <div class="max-w-5xl mx-auto">
+    <div class="bg-gray-100 max-w-5xl mx-auto rounded-xl p-6 md:p-8 lg:p-10 shadow-sm">
 
         <!-- Header -->
-        <div class="mb-8">
+        <div class="mb-8 rounded-xl">
             <h1 class="text-3xl font-bold text-slate-800">
                 Place an Order
             </h1>
@@ -82,12 +110,13 @@ const submit = () => {
             <p class="text-slate-500 mt-2">
                 Add one or more items to your order.
             </p>
+
         </div>
 
-        <div class="bg-white rounded-2xl border shadow-sm">
+        <div class="bg-white rounded-2xl shadow-sm p-2 md:p-4 lg:p-6">
 
             <!-- Form Header -->
-            <div class="p-6 border-b">
+            <div class="p-6 ">
                 <h2 class="text-lg font-bold text-slate-800">
                     Order Information
                 </h2>
@@ -107,17 +136,17 @@ const submit = () => {
                     </label>
 
                     <input
-                        v-model="form.date"
+                        v-model="form.date_created"
                         type="date"
                         required
-                        class="w-full border rounded-lg px-4 py-3
+                        class="text-gray-700 placeholder:text-gray-400 border rounded-lg px-4 py-3
                                focus:ring-2 focus:ring-indigo-500
                                outline-none"
                     />
 
-                    <p v-if="form.errors.date"
+                    <p v-if="form.errors.date_created"
                        class="text-red-500 text-sm mt-1">
-                        {{ form.errors.date }}
+                        {{ form.errors.date_created }}
                     </p>
                 </div>
 
@@ -173,7 +202,7 @@ const submit = () => {
                         </div>
 
                         <!-- Fields -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-5">
 
                             <!-- Item Name -->
                             <div>
@@ -187,7 +216,7 @@ const submit = () => {
                                     type="text"
                                     placeholder="Enter item name"
                                     required
-                                    class="w-full border rounded-lg px-4 py-3
+                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
                                            bg-white outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
@@ -205,7 +234,7 @@ const submit = () => {
                                     type="number"
                                     min="1"
                                     required
-                                    class="w-full border rounded-lg px-4 py-3
+                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
                                            bg-white outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
@@ -224,7 +253,7 @@ const submit = () => {
                                     min="0.01"
                                     step="0.01"
                                     required
-                                    class="w-full border rounded-lg px-4 py-3
+                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
                                            bg-white outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
@@ -294,7 +323,6 @@ const submit = () => {
                                 : 'Submit Order'
                         }}
                     </button>
-
                 </div>
 
             </form>

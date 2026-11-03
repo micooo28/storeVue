@@ -1,7 +1,7 @@
-
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+
 import CustomerLayout from '@/layouts/CustomerLayout.vue';
 
 defineOptions({
@@ -45,13 +45,13 @@ function refreshDashboard() {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 flex">
+    <div class="min-h-screen w-full rounded-xl bg-gray-100 flex">
 
         <!-- MAIN CONTENT -->
-        <main class="flex-1 p-8">
+        <main class="flex-1">
 
             <!-- HEADER -->
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex justify-between items-center p-6">
                 <div>
                     <h2 class="text-3xl font-bold text-gray-800">
                         {{ pageTitle }}

@@ -1,6 +1,7 @@
 
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3'
+import { SidebarOpen } from '@lucide/vue';
 
 defineProps<{
     open: boolean
@@ -53,7 +54,7 @@ const menuItems = [
             </p>
         </div>
 
-        <!-- <div class="p-5">
+        <div class="p-5">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full bg-indigo-500
                             flex items-center justify-center font-bold">
@@ -65,14 +66,9 @@ const menuItems = [
                     <p class="text-xs text-slate-400">Customer</p>
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <nav class="px-3 space-y-2 flex-1">
-
-            <!-- <p class="text-xs text-slate-500 uppercase px-3 mb-3">
-                Menu
-            </p> -->
-
             <Link
                 v-for="item in menuItems"
                 :key="item.route"
@@ -94,7 +90,7 @@ const menuItems = [
 
         </nav>
 
-        <!-- <div class="p-4 border-t border-slate-700">
+        <div class="p-4 border-t border-slate-700">
             <Link
                 href="/logout"
                 method="post"
@@ -104,7 +100,7 @@ const menuItems = [
             >
                 ↪ Logout
             </Link>
-        </div> -->
+        </div>
 
     </aside>
 </template>

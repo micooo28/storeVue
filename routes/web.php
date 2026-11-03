@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerRegistrationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -23,5 +24,14 @@ Route::get('/order', function () {
     return Inertia::render('customer/Customersorder');
 })->name('customer.orders');
 
+Route::post('/customer/orders', [OrderController::class, 'store'])
+    ->name('orders.store');
+
+Route::get('/customer/register', function () {
+    return Inertia::render('customer/Customerregistration');
+})->name('customer.register');
+
+Route::post('/customer/register/submit', [CustomerRegistrationController::class, 'store'])
+    ->name('customer.register.submit');
 
 require __DIR__.'/settings.php';

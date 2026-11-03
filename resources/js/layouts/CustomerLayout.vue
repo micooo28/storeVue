@@ -1,12 +1,28 @@
 
 <script setup lang="ts">
-import CustomerSidebar from '@/components/customer/CustomerSidebar.vue'
-import { ref } from 'vue'
+// import CustomerSidebar from '@/components/customer/CustomerSidebar.vue'
+import AppSidebarLayout from '@/layouts/app/AppSidebarLayout.vue'
+// import { ref } from 'vue'
 
-const sidebarOpen = ref(true)
+// const sidebarOpen = ref(true)
+
 </script>
 
 <template>
+    <div class="min-h-screen bg-slate-50 flex w-full">
+        <!-- <CustomerSidebar :open="sidebarOpen" :close="!sidebarOpen"/> -->
+    
+         <div class="flex-1 w-full" bg-slate-50>
+            <AppSidebarLayout>
+            <main class="w-full">
+                <slot />
+            </main>
+</AppSidebarLayout>
+        </div>
+        
+    </div>
+</template>
+<!-- <template>
     <div class="min-h-screen bg-slate-50 flex">
 
         <CustomerSidebar :open="sidebarOpen" />
@@ -44,4 +60,4 @@ const sidebarOpen = ref(true)
         </div>
 
     </div>
-</template>
+</template> -->

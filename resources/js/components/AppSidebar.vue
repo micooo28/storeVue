@@ -18,36 +18,61 @@ import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
+   {
+        name: 'Dashboard',
         icon: LayoutGrid,
+        route: '/here'
+    },
+    {
+        name: 'Customer',
+        icon: BookOpen,
+        route: '/customerlist'
+    },
+    {
+        name: 'Orders',
+        icon: FolderGit2,
+        route: '/order'
+    },
+    {
+        name: 'Notifications',
+        icon: FolderGit2,
+        route: '/customer/support'
+    },
+    {
+        name: 'Settings',
+        icon: FolderGit2,
+        route: '/customer/profile'
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        name: 'Repository',
+        route: 'https://github.com/laravel/vue-starter-kit',
         icon: FolderGit2,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
+        name: 'Documentation',
+        route: 'https://laravel.com/docs/starter-kits#vue',
         icon: BookOpen,
     },
 ];
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="offcanvas" variant="inset">
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
-                            <AppLogo />
-                        </Link>
+                    <SidebarMenuButton size="lg" >
+                       <div class="px-6 py-7 border-b border-slate-700" flex>                    
+                            <h1 class="text-2xl font-bold tracking-wide">
+                                Quincy Store
+                            </h1>                            
+                            <p class="text-xs text-slate-400 mt-1">
+                                Admin Portal
+                            </p>
+                        </div>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
@@ -57,10 +82,10 @@ const footerNavItems: NavItem[] = [
             <NavMain :items="mainNavItems" />
         </SidebarContent>
 
-        <SidebarFooter>
+        <!-- <SidebarFooter>
             <NavFooter :items="footerNavItems" />
             <NavUser />
-        </SidebarFooter>
+        </SidebarFooter> -->
     </Sidebar>
     <slot />
 </template>
