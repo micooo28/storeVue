@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\CustomerInfo;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -36,5 +38,19 @@ class OrderController extends Controller
     });
 
     return redirect()->back()->with('success', 'Orders successfully saved!');
+}
+public function index()
+{
+    $employee = CustomerInfo::select(
+        'customer_id',
+        'customer_fname',
+        'customer_lname',
+    )->get();
+
+
+
+    return Inertia::render('customer/Customersorder', [
+        'employee' => $employee
+    ]);
 }
 }

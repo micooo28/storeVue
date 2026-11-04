@@ -18,6 +18,9 @@ class CustomerRegistrationController extends Controller
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
             'contact_no' => 'required|string|max:20',
+            'employer'=> 'required|numeric|max:20',
+            'supervisor'=> 'required|string|max:255',
+
 
         // Address
             'street' => 'required|string|max:255',
@@ -52,6 +55,8 @@ class CustomerRegistrationController extends Controller
                 'customer_fname' => $registrationInfo['fname'],
                 'customer_lname' => $registrationInfo['lname'],
                 'contact_no' => $registrationInfo['contact_no'],
+                'supervisor'=> $registrationInfo['supervisor'],
+                'employer'=> $registrationInfo['employer'],
                 'login_id' => $login->login_id,
                 'address_id' => $address->address_id,
             ]);

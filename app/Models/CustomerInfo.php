@@ -14,6 +14,8 @@ class CustomerInfo extends Model
         'customer_fname',
         'customer_lname',
         'contact_no',
+        'supervisor',
+        'employer',
         'address_id',
         'login_id',
     ];

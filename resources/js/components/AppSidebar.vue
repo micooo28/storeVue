@@ -36,7 +36,7 @@ const mainNavItems: NavItem[] = [
     {
         name: 'Notifications',
         icon: FolderGit2,
-        route: '/customer/support'
+        route: '/customer/testpage'
     },
     {
         name: 'Settings',

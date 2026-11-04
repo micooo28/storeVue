@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
@@ -15,6 +14,26 @@ interface Customer {
     contact_number: string
     total_credits: number
 }
+
+interface employee {
+    customer_id: number;
+    customer_fname: string;
+    customer_lname: string;
+    contact_no: string;
+    login_credentials: {
+        email: string;
+        password: string;
+    } | null;
+    address: {
+        province: string;
+        city: string;
+        barangay: string;
+        street: string | null;
+    } | null;
+}
+defineProps<{
+    employees: employee[];
+}>();
 
 const search = ref('')
 
@@ -92,23 +111,17 @@ function addCustomer() {
 </script>
 
 <template>
-    <div class="bg-gray-100 w-full rounded-xl shadow-sm">
-         <!-- <div class="p-6">
-            <h1 class="text-3xl font-bold text-slate-800 ">
-                Summary of Customers
-            </h1>
-
-            <p class="text-slate-500 mt-2">
-                View customer information and credit totals.
-            </p> 
-                     </div>-->
+    <div class=" w-full rounded-xl shadow-sm">
+        <p>{{ employees }}</p>
                 <div class="flex justify-between items-center p-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800">
+
+       
+                    <h2 class="text-3xl font-bold">
                         Summary of Customers
                     </h2>
 
-                    <p class="text-gray-500">
+                    <p>
                         View customer information and credit totals.
                     </p>
                 </div>
@@ -127,18 +140,18 @@ function addCustomer() {
         </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 m-8 ">
 
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <p class="text-gray-500">
+            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
+                    <p>
                     Total Customers
                     </p>
 
-                <h2 class="text-3xl font-bold text-slate-800 mt-2">
+                <h2 class="text-3xl font-bold mt-2">
                     {{ customers.length }}
                 </h2>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <p class="text-gray-500">
+            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
+                    <p>
                     Combined Credit Total
                 </p>
 
@@ -147,11 +160,11 @@ function addCustomer() {
                 </h2>
             </div>
             
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <p class="text-gray-500">
+            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
+                    <p>
                     Powerzone
                 </p>
-                <p class="text-sm text-slate-500">
+                <p class="text-sm">
                     Total Customer: {{ customers.length }}
                 </p>
 
@@ -160,8 +173,8 @@ function addCustomer() {
                 </h2>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <p class="text-gray-500">
+            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
+                    <p>
                     Shipyard
                 </p>
                 <p class="text-sm text-slate-500">
@@ -176,18 +189,18 @@ function addCustomer() {
         </div>
 
         <!-- Customer Table -->
-        <div class="bg-white rounded-xl shadow-sm lg:m-8">
+        <div class="rounded-xl shadow-sm lg:m-8">
 
             <!-- Table Header -->
             <div class="p-6 flex flex-col md:flex-row
                         justify-between gap-4 ">
 
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">
+                    <h2 class="text-lg font-bold">
                         Customer List
                     </h2>
 
-                    <p class="text-sm text-slate-500">
+                    <p class="text-sm">
                         Customer credit overview
                     </p>
                 </div>
@@ -208,10 +221,10 @@ function addCustomer() {
 
             <!-- Table -->
             <div class="overflow-x-auto">
-                <table class="w-full text-left bg-white mt-8 p-6 rounded-xl shadow-sm"">
+                <table class="w-full text-left mt-8 p-6 rounded-xl shadow-sm"">
 
-                    <thead class="bg-slate-50 text-slate-500 text-sm">
-                        <tr class="border-b-gray-200 text-gray-500">
+                    <thead class="bg-gray-900 text-sm">
+                        <tr class="border-b-gray-200 ">
                             <th class="p-3">Customer Name</th>
                             <th class="p-3">Company</th>
                             <th class="p-3">Contact Number</th>
@@ -243,16 +256,16 @@ function addCustomer() {
                                 </button>
                             </td>
 
-                            <td class="px-6 py-4 text-slate-600">
+                            <td class="px-6 py-4 text-slate-300">
                                 {{ customer.company }}
                             </td>
 
-                            <td class="px-6 py-4 text-slate-500">
+                            <td class="px-6 py-4 text-slate-400">
                                 {{ customer.contact_number }}
                             </td>
 
                             <td class="px-6 py-4 text-right
-                                       font-bold text-slate-800">
+                                       font-bold text-slate-500">
                                 {{ formatCurrency(customer.total_credits) }}
                             </td>
 

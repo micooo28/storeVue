@@ -45,7 +45,7 @@ function refreshDashboard() {
 </script>
 
 <template>
-    <div class="min-h-screen w-full rounded-xl bg-gray-100 flex">
+    <div class="min-h-screen w-full rounded-xl p-4 flex">
 
         <!-- MAIN CONTENT -->
         <main class="flex-1">
@@ -53,11 +53,11 @@ function refreshDashboard() {
             <!-- HEADER -->
             <div class="flex justify-between items-center p-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800">
+                    <h2 class="text-3xl font-bold ">
                         {{ pageTitle }}
                     </h2>
 
-                    <p class="text-gray-500">
+                    <p>
                         Welcome to your admin dashboard.
                     </p>
                 </div>
@@ -72,28 +72,28 @@ function refreshDashboard() {
             <!-- SUMMARY CARDS -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 
-                <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="bg-gray-900 p-6 rounded-xl shadow-sm">
                     <p class="text-gray-500">Total Customers</p>
                     <h3 class="text-green-500 text-3xl font-bold mt-2">
                         {{ totalCustomers }}
                     </h3>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="bg-gray-900 p-6 rounded-xl shadow-sm">
                     <p class="text-gray-500">Total Sales</p>
                     <h3 class="text-green-500 text-3xl font-bold mt-2">
                         ₱{{ totalSales.toLocaleString() }}
                     </h3>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="bg-gray-900 p-6 rounded-xl shadow-sm">
                     <p class="text-gray-500">Total Orders</p>
                     <h3 class="text-green-500 text-3xl font-bold mt-2">
                         {{ totalOrders }}
                     </h3>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="bg-gray-900 p-6 rounded-xl shadow-sm">
                     <p class="text-gray-500">Pending Orders</p>
                     <h3 class="text-3xl font-bold mt-2 text-orange-500">
                         {{ pendingOrders }}
@@ -103,7 +103,7 @@ function refreshDashboard() {
             </div>
 
             <!-- TRANSACTIONS TABLE -->
-            <div class="bg-white mt-8 p-6 rounded-xl shadow-sm">
+            <div class=" mt-8 p-6 rounded-xl shadow-sm">
 
                 <h3 class="text-xl font-bold mb-5">
                     Recent Transactions
@@ -112,7 +112,7 @@ function refreshDashboard() {
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead>
-                            <tr class="border-b text-gray-500">
+                            <tr class="border-b text-gray-400">
                                 <th class="p-3">ID</th>
                                 <th class="p-3">Customer</th>
                                 <th class="p-3">Amount</th>
@@ -126,23 +126,23 @@ function refreshDashboard() {
                                 :key="transaction.id"
                                 class="border-b hover:bg-gray-50">
 
-                                <td class="p-3 font-mono text-gray-700">
+                                <td class="p-3 font-mono text-gray-400">
                                     {{ transaction.id }}
                                 </td>
 
-                                <td class="p-3 font-mono text-gray-700">
+                                <td class="p-3 font-mono text-gray-400">
                                     {{ transaction.customer }}
                                 </td>
 
-                                <td class="p-3 font-mono text-gray-700">
+                                <td class="p-3 font-mono text-gray-400">
                                     ₱{{ transaction.amount.toLocaleString() }}
                                 </td>
 
                                 <td class="p-3">
                                     <span
                                         :class="transaction.status === 'Completed'
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-yellow-100 text-yellow-700'"
+                                            ? 'text-green-700'
+                                            : 'text-yellow-700'"
                                         class="px-3 py-1 rounded-full text-sm">
                                         {{ transaction.status }}
                                     </span>

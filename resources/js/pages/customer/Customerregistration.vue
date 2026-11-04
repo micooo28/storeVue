@@ -9,6 +9,8 @@ const form = useForm({
     city: '',
     province: '',
     contact_no: '',
+    employer: '',
+    supervisor: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -16,7 +18,9 @@ const form = useForm({
 
 const submit = () => {
     form.post('/customer/register/submit', {
-        onSuccess: () => {
+        onSuccess: (
+            
+        ) => {
             form.reset()
         },
     }
@@ -38,16 +42,20 @@ const submit = () => {
 
             <form @submit.prevent="submit" class="space-y-4">
 
-                <!-- First Name -->
+                <!-- Personal Info -->
+                 <div>
+                    <label class="block text-sm font-medium mb-1">
+                        Full Name
+                    </label>
+                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">
                         First Name
                     </label>
-
                     <input
                         v-model="form.fname"
                         type="text"
-                        placeholder="Enter your first name"
+                        placeholder="Enter first name"
                         class="w-full border rounded-lg px-3 py-2"
                     />
 
@@ -61,7 +69,6 @@ const submit = () => {
                     <label class="block text-sm font-medium mb-1">
                         Last Name
                     </label>
-
                     <input
                         v-model="form.lname"
                         type="text"
@@ -73,8 +80,44 @@ const submit = () => {
                         {{ form.errors.lname }}
                     </p>
                 </div>
+                <div class="mt-9">
+                    <label class="block text-sm font-medium mb-1">
+                    Employment Details
+                    </label>
+                </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1">
+                        Employer 
+                    </label>
+
+                    <input
+                        v-model="form.employer"
+                        type="text"
+                        placeholder="Enter Employer"
+                        class="w-full border rounded-lg px-3 py-2"
+                    />
+
+                    <p v-if="form.errors.employer" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.employer }}
+                    </p>
+                </div>
 
                 <div>
+                    <label class="block text-sm font-medium mb-1">
+                        Immediate Supervisor 
+                    </label>
+                    <input
+                        v-model="form.supervisor"
+                        type="text"
+                        placeholder="Enter Supervisor"
+                        class="w-full border rounded-lg px-3 py-2"
+                    />
+                    <p v-if="form.errors.supervisor" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.supervisor }}
+                    </p>
+                </div> 
+
+                <div class="mt-9">
                     <label class="block text-sm font-medium mb-1">
                         Address
                     </label>
@@ -148,7 +191,7 @@ const submit = () => {
                     </p>
                 </div>
 
-                <div>
+                <div class="mt-9">
                     <label class="block text-sm font-medium mb-1">
                         Login Credentials
                     </label>

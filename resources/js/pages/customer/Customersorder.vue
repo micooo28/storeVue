@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
 defineOptions({
@@ -15,8 +15,41 @@ interface OrderItem {
     total: number
     initial_amount: number
     user_id: number
-
+    employeeName: string
 }
+
+interface Employee {
+    customer_id: number;
+    customer_fname: string;
+    customer_lname: string;
+}
+
+const props = defineProps<{
+    employee: Employee[]
+    
+}>()
+
+const search = ref('')
+
+
+const filteredCustomers = computed(() => {
+    const keyword = search.value.toLowerCase().trim()
+
+       if (keyword.length < 3) {
+        return []
+        }
+
+    return props.employee.filter(employee => {
+        const fullName =
+            `${employee.customer_fname} ${employee.customer_lname}`.toLowerCase()
+
+        return fullName.includes(keyword)         
+    })
+})
+
+
+console.log('Customers:', props.employee)
+console.log('Filtered:', filteredCustomers.value)
 
 const form = useForm({
     date_created: new Date().toISOString().split('T')[0],
@@ -28,7 +61,8 @@ const form = useForm({
             amount: 0,
             total: 0,
             initial_amount: 0,
-            user_id: 1
+            user_id: 0,
+            employeeName: ''
         }
     ] as unknown as OrderItem[]
 })
@@ -42,7 +76,8 @@ const addOrder = () => {
         amount: 0,
         total: 0,
         initial_amount: 0,
-        user_id: 1,
+        user_id: 0,
+        employeeName: '',
     })
 }
 
@@ -99,21 +134,21 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="bg-gray-100 max-w-5xl mx-auto rounded-xl p-6 md:p-8 lg:p-10 shadow-sm">
+    <div class="bg-black max-w-md mx-auto rounded-xl p-6 md:p-8 shadow-sm">
 
         <!-- Header -->
-        <div class="mb-8 rounded-xl">
-            <h1 class="text-3xl font-bold text-slate-800">
+        <div class="mb-4 rounded-xl">
+            <h1 class="text-3xl font-bold">
                 Place an Order
             </h1>
 
-            <p class="text-slate-500 mt-2">
+            <p>
                 Add one or more items to your order.
             </p>
 
         </div>
 
-        <div class="bg-white rounded-2xl shadow-sm p-2 md:p-4 lg:p-6">
+        <div class=" rounded-2xl shadow-sm p-2 ">
 
             <!-- Form Header -->
             <div class="p-6 ">
@@ -129,9 +164,8 @@ const submit = () => {
             <form @submit.prevent="submit" class="p-6">
 
                 <!-- Date -->
-                <div class="mb-8 max-w-sm">
-                    <label class="block text-sm font-semibold
-                                  text-slate-700 mb-2">
+                <div class="mb-4 max-w-sm">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
                         Order Date
                     </label>
 
@@ -149,7 +183,33 @@ const submit = () => {
                         {{ form.errors.date_created }}
                     </p>
                 </div>
+                <div class="mb-4 max-w-sm">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        Employee Name
+                    </label>
+                    </div>
+<input
+    v-model="search"
+    type="text"
+    placeholder="Search customer..."
+    class="w-full md:w-72 border border-slate-300
+           rounded-lg px-4 py-2 text-sm
+           focus:ring-2 focus:ring-indigo-500
+           outline-none"
+/>
 
+<div
+    v-for="customer in filteredCustomers"
+    :key="customer.customer_id"
+    class="border-t border-gray-200 hover:bg-slate-50 transition p-3"
+>
+    <p
+    class="font-semibold text-indigo-600 hover:underline">
+        {{ customer.customer_fname }}
+        {{ customer.customer_lname }}
+    </p>
+</div>
+        
                 <!-- Items Header -->
                 <div class="flex justify-between items-center mb-4">
                     <div>
@@ -179,7 +239,7 @@ const submit = () => {
                     <div
                         v-for="(item, index) in form.items"
                         :key="index"
-                        class="border rounded-xl p-5 bg-slate-50"
+                        class="border rounded-xl p-5 "
                     >
 
                         <!-- Item Header -->
@@ -216,8 +276,8 @@ const submit = () => {
                                     type="text"
                                     placeholder="Enter item name"
                                     required
-                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
-                                           bg-white outline-none
+                                    class=" placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
+                                            outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
                             </div>
@@ -234,8 +294,8 @@ const submit = () => {
                                     type="number"
                                     min="1"
                                     required
-                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
-                                           bg-white outline-none
+                                    class=" placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
+                                            outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
                             </div>
@@ -253,8 +313,8 @@ const submit = () => {
                                     min="0.01"
                                     step="0.01"
                                     required
-                                    class="text-gray-700 placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
-                                           bg-white outline-none
+                                    class="placeholder:text-gray-400 w-full border rounded-lg px-4 py-3
+                                           outline-none
                                            focus:ring-2 focus:ring-indigo-500"
                                 />
                             </div>
@@ -264,11 +324,11 @@ const submit = () => {
                         <!-- Item Subtotal -->
                         <div class="flex justify-end mt-5">
                             <div class="text-right">
-                                <p class="text-xs text-slate-500">
+                                <p class="text-xs ">
                                     Item Subtotal
                                 </p>
 
-                                <p class="font-bold text-slate-800 text-lg">
+                                <p class="font-bold text-lg">
                                     {{ formatCurrency(getItemTotal(item)) }}
                                 </p>
                             </div>
@@ -279,7 +339,7 @@ const submit = () => {
                 </div>
 
                 <!-- Grand Total -->
-                <div class="mt-8 bg-indigo-50 rounded-xl p-6
+                <div class="mt-8 border border-white rounded-xl p-6
                             flex justify-between items-center">
 
                     <div>
