@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
 import { computed, ref, watch } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { router, useForm } from '@inertiajs/vue3'
 
 defineOptions({
     layout: CustomerLayout
@@ -13,9 +13,7 @@ interface OrderItem {
     quantity: number
     amount: number
     total: number
-    initial_amount: number
-    user_id: number
-    employeeName: string
+    user_id: number | null
 }
 
 interface Employee {
@@ -30,26 +28,42 @@ const props = defineProps<{
 }>()
 
 const search = ref('')
-
+const selectedCustomer = ref<Employee | null>(null)
 
 const filteredCustomers = computed(() => {
     const keyword = search.value.toLowerCase().trim()
 
-       if (keyword.length < 3) {
+    if (keyword.length < 3) {
         return []
-        }
+    }
 
-    return props.employee.filter(employee => {
+    return props.employee.filter(customer => {
         const fullName =
-            `${employee.customer_fname} ${employee.customer_lname}`.toLowerCase()
+            `${customer.customer_fname} ${customer.customer_lname}`.toLowerCase()
 
-        return fullName.includes(keyword)         
+        return fullName.includes(keyword)
     })
 })
 
+// Select a customer from the dropdown
+const selectCustomer = (customer: Employee) => {
+    selectedCustomer.value = customer
+    search.value = `${customer.customer_fname} ${customer.customer_lname}`
 
-console.log('Customers:', props.employee)
-console.log('Filtered:', filteredCustomers.value)
+       form.items.forEach(item => {
+        item.user_id = customer.customer_id
+    })
+}
+
+// Clear the selected customer
+const clearCustomer = () => {
+    selectedCustomer.value = null
+    search.value = ''
+
+    form.items.forEach(item => {
+        item.user_id = null
+    })
+}
 
 const form = useForm({
     date_created: new Date().toISOString().split('T')[0],
@@ -61,8 +75,7 @@ const form = useForm({
             amount: 0,
             total: 0,
             initial_amount: 0,
-            user_id: 0,
-            employeeName: ''
+            user_id: selectedCustomer.value?.customer_id ?? null
         }
     ] as unknown as OrderItem[]
 })
@@ -75,9 +88,7 @@ const addOrder = () => {
         quantity: 1,
         amount: 0,
         total: 0,
-        initial_amount: 0,
-        user_id: 0,
-        employeeName: '',
+        user_id: selectedCustomer.value?.customer_id ?? null
     })
 }
 
@@ -123,7 +134,7 @@ const submit = () => {
     {
         onSuccess: () => {
             console.log('Order successfully submitted!'),
-            form.reset()
+            router.reload()
         },
         onError: (errors) => {
             console.log('Validation errors:', errors)
@@ -188,27 +199,50 @@ const submit = () => {
                         Employee Name
                     </label>
                     </div>
-<input
-    v-model="search"
-    type="text"
-    placeholder="Search customer..."
-    class="w-full md:w-72 border border-slate-300
-           rounded-lg px-4 py-2 text-sm
-           focus:ring-2 focus:ring-indigo-500
-           outline-none"
-/>
+                     <input
+        v-model="search"
+        type="text"
+        placeholder="Search customer..."
+        class="w-full border border-slate-300 rounded-lg px-4 py-2
+               text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+        @focus="selectedCustomer = null"
+    />
 
-<div
-    v-for="customer in filteredCustomers"
-    :key="customer.customer_id"
-    class="border-t border-gray-200 hover:bg-slate-50 transition p-3"
->
-    <p
-    class="font-semibold text-indigo-600 hover:underline">
-        {{ customer.customer_fname }}
-        {{ customer.customer_lname }}
-    </p>
-</div>
+    <!-- Dropdown results -->
+    <div
+        v-if="search.trim().length >= 3 && !selectedCustomer"
+        class="absolute z-50 mt-1 max-w-3xl bg-gray-800 border border-gray-200
+               rounded-lg shadow-lg max-h-60 overflow-y-auto"
+    >
+
+        <button
+            v-for="customer in filteredCustomers"
+            :key="customer.customer_id"
+            type="button"
+            @click="selectCustomer(customer)"
+            class="w-full text-left pl-4 pr-38 py-3 hover:bg-gray-900
+                   transition border-b border-gray-100"
+        >
+            <p class="font-semibold">
+                {{ customer.customer_fname }}
+                {{ customer.customer_lname }}
+            </p>
+
+            <p class="text-xs text-gray-400 hidden">
+                Customer ID: {{ customer.customer_id }}
+            </p>
+        </button>
+
+        <!-- No results -->
+        <p
+            v-if="filteredCustomers.length === 0"
+            class="w-full text-left pl-4 pr-38 py-3 text-sm text-gray-400"
+        >
+            No customers found.
+        </p>
+    </div>
+
+
         
                 <!-- Items Header -->
                 <div class="flex justify-between items-center mb-4">

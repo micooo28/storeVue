@@ -92,7 +92,7 @@ const submit = () => {
 
                     <input
                         v-model="form.employer"
-                        type="text"
+                        type="number"
                         placeholder="Enter Employer"
                         class="w-full border rounded-lg px-3 py-2"
                     />
@@ -101,7 +101,6 @@ const submit = () => {
                         {{ form.errors.employer }}
                     </p>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium mb-1">
                         Immediate Supervisor 

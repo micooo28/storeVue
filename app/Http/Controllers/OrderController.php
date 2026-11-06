@@ -14,13 +14,12 @@ class OrderController extends Controller
    {
     $data = $request->validate([
         'items' => 'required|array|min:1',
-
         'items.*.date_created' => 'required|date',
         'items.*.item_name' => 'required|string|max:255',
         'items.*.quantity' => 'required|numeric|min:1',
         'items.*.amount' => 'required|numeric|min:0',
         'items.*.initial_amount' => 'required|numeric|min:0',
-        'items.*.user_id' => 'required|integer',
+        'items.*.user_id' => 'required|integer|exists:customer_personalinfo,customer_id', 
     ]);
 
     DB::transaction(function () use ($data) {
@@ -31,9 +30,9 @@ class OrderController extends Controller
                 'quantity' => $item['quantity'],
                 'amount' => $item['amount'],
                 'total' => $item['quantity'] * $item['amount'],
-                'initial_amount' => $item['initial_amount'],
+                'initial_amount' => $item['quantity'] * $item['amount'],
                 'user_id' => $item['user_id'],
-            ]);
+           ]);
         }
     });
 

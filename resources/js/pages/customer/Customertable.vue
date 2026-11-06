@@ -6,91 +6,52 @@ defineOptions({
     layout: CustomerLayout
 })
 
-interface Customer {
-    id: number
-    first_name: string
-    last_name: string
-    company: string
-    contact_number: string
-    total_credits: number
-}
-
 interface employee {
     customer_id: number;
     customer_fname: string;
     customer_lname: string;
     contact_no: string;
-    login_credentials: {
-        email: string;
-        password: string;
-    } | null;
-    address: {
-        province: string;
-        city: string;
-        barangay: string;
-        street: string | null;
-    } | null;
+    employer: number;
+    total: number;
+    initial_amount: number;
 }
-defineProps<{
-    employees: employee[];
+
+interface employment{
+    employer: number;
+    employer_name: string;
+}
+
+
+const props = defineProps<{
+    employee: employee[];
+    employment:employment[];
 }>();
+console.log(props.employment)
+
 
 const search = ref('')
 
-const customers = ref<Customer[]>([
-    {
-        id: 1,
-        first_name: 'Juan',
-        last_name: 'Dela Cruz',
-        company: 'Shipyard',
-        contact_number: '09123456789',
-        total_credits: 15000
-    },
-    {
-        id: 2,
-        first_name: 'Pedro',
-        last_name: 'Santos',
-        company: 'Powerzone',
-        contact_number: '09987654321',
-        total_credits: 25000
-    },
-    {
-        id: 3,
-        first_name: 'Maria',
-        last_name: 'Reyes',
-        company: 'Shipyard',
-        contact_number: '09234567891',
-        total_credits: 12000
-    },
-    {
-        id: 4,
-        first_name: 'Jose',
-        last_name: 'Garcia',
-        company: 'Powerzone',
-        contact_number: '09567891234',
-        total_credits: 18000
-    }
-])
+const employee = ref<employee | null>(null)
+
 
 const filteredCustomers = computed(() => {
     const keyword = search.value.toLowerCase()
 
-    return customers.value.filter(customer => {
+    return props.employee.filter(employee => {
         const fullName =
-            `${customer.first_name} ${customer.last_name}`.toLowerCase()
+            `${employee.customer_fname} ${employee.customer_lname}`.toLowerCase()
 
-        return fullName.includes(keyword) ||
-            customer.company.toLowerCase().includes(keyword)
+        return fullName.includes(keyword) 
+            // || employee.employer.toLowerCase().includes(keyword)
     })
 })
 
 const totalCredits = computed(() => {
-    return customers.value.reduce(
-        (total, customer) => total + customer.total_credits,
+    return props.employee.reduce(
+        (total, employee) => total + Number(employee.total),
         0
     )
 })
-
 const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
@@ -98,12 +59,13 @@ const formatCurrency = (amount: number) => {
     }).format(amount)
 }
 
-const selectedCustomer = ref<Customer | null>(null)
+const selectedCustomer = ref<employee | null>(null)
 
-function viewCustomer(customer: Customer) {
+function viewCustomer(customer: employee) {
     selectedCustomer.value = customer
 }
-const createCustomer = ref<Customer | null>(null)
+
+const createCustomer = ref<employee | null>(null)
 
 function addCustomer() {
     router.visit('/customer/register')
@@ -112,10 +74,8 @@ function addCustomer() {
 
 <template>
     <div class=" w-full rounded-xl shadow-sm">
-        <p>{{ employees }}</p>
                 <div class="flex justify-between items-center p-6">
                 <div>
-
        
                     <h2 class="text-3xl font-bold">
                         Summary of Customers
@@ -146,7 +106,7 @@ function addCustomer() {
                     </p>
 
                 <h2 class="text-3xl font-bold mt-2">
-                    {{ customers.length }}
+                    {{ props.employee.length }}
                 </h2>
             </div>
 
@@ -159,33 +119,19 @@ function addCustomer() {
                     {{ formatCurrency(totalCredits) }}
                 </h2>
             </div>
-            
-            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
+            <div 
+                class="bg-gray-900  p-6 rounded-xl shadow-sm">
                     <p>
                     Powerzone
                 </p>
                 <p class="text-sm">
-                    Total Customer: {{ customers.length }}
+                    Total Customer: {{ props.employee.length }}
                 </p>
 
                 <h2 class="text-3xl font-bold text-indigo-600 mt-2">
                    {{ formatCurrency(totalCredits) }}
                 </h2>
             </div>
-
-            <div class="bg-gray-900  p-6 rounded-xl shadow-sm">
-                    <p>
-                    Shipyard
-                </p>
-                <p class="text-sm text-slate-500">
-                      Total Customer: {{ customers.length }}
-                </p>
-
-                <h2 class="text-3xl font-bold text-indigo-600 mt-2">
-                     {{ formatCurrency(totalCredits) }}
-                </h2>
-            </div>
-            
         </div>
 
         <!-- Customer Table -->
@@ -240,38 +186,36 @@ function addCustomer() {
                     <tbody>
 
                         <tr
-                            v-for="customer in filteredCustomers"
-                            :key="customer.id"
+                            v-for="employee in filteredCustomers"
+                            :key="employee.customer_id"
                             class="border-t-gray-500 hover:bg-slate-50 transition"
                         >
 
                             <td class="px-6 py-4 ">
                                 <button
-                                    @click="viewCustomer(customer)"
                                     class="font-semibold text-indigo-600
                                            hover:underline"
                                 >
-                                    {{ customer.first_name }}
-                                    {{ customer.last_name }}
+                                    {{ employee.customer_fname }}
+                                    {{ employee.customer_lname }}
                                 </button>
                             </td>
 
                             <td class="px-6 py-4 text-slate-300">
-                                {{ customer.company }}
+                                {{ employee.employer }}
                             </td>
 
                             <td class="px-6 py-4 text-slate-400">
-                                {{ customer.contact_number }}
+                                {{ employee.contact_no }}   
                             </td>
 
                             <td class="px-6 py-4 text-right
                                        font-bold text-slate-500">
-                                {{ formatCurrency(customer.total_credits) }}
+                                {{ formatCurrency(employee.total) }}
                             </td>
 
                             <td class="px-6 py-4 text-center">
                                 <button
-                                    @click="viewCustomer(customer)"
                                     class="px-4 py-2 rounded-lg
                                            bg-indigo-50 text-indigo-600
                                            hover:bg-indigo-100 text-sm"
@@ -298,7 +242,7 @@ function addCustomer() {
             <!-- Footer -->
             <div class="p-5 border-t-gray-100 text-sm text-slate-500">
                 Showing {{ filteredCustomers.length }} of
-                {{ customers.length }} customers
+                <!-- {{ employee.length }} customers -->
             </div>
 
         </div>
@@ -382,22 +326,22 @@ function addCustomer() {
                     <div>
                         <p class="text-sm text-slate-500">Full Name</p>
                         <p class="font-semibold">
-                            {{ selectedCustomer.first_name }}
-                            {{ selectedCustomer.last_name }}
+                            {{ selectedCustomer.customer_fname }}
+                            {{ selectedCustomer.customer_lname }}
                         </p>
                     </div>
 
                     <div>
                         <p class="text-sm text-slate-500">Company</p>
                         <p class="font-semibold">
-                            {{ selectedCustomer.company }}
+                            {{ selectedCustomer.employer }}
                         </p>
                     </div>
 
                     <div>
                         <p class="text-sm text-slate-500">Contact</p>
                         <p class="font-semibold">
-                            {{ selectedCustomer.contact_number }}
+                            {{ selectedCustomer.contact_no }}
                         </p>
                     </div>
 
@@ -407,9 +351,9 @@ function addCustomer() {
                         </p>
 
                         <h2 class="text-2xl font-bold text-indigo-700 mt-2">
-                            {{ formatCurrency(
-                                selectedCustomer.total_credits
-                            ) }}
+                            <!-- {{ formatCurrency(
+                                // selectedCustomer.total_credits
+                            ) }} -->
                         </h2>
                     </div>
 

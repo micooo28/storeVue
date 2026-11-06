@@ -18,5 +18,13 @@ class Order extends Model
         'initial_amount',
         'user_id'
     ];
+    public function customerId(){
+        return $this->belongsTo(
+            CustomerInfo::class,
+            'user_id', #foreign key
+            'customer_id' #primary key
+        );
+    }
+
     public $timestamps = false;
 }

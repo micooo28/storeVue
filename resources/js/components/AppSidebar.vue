@@ -31,7 +31,7 @@ const mainNavItems: NavItem[] = [
     {
         name: 'Orders',
         icon: FolderGit2,
-        route: '/order'
+        route: '/orders'
     },
     {
         name: 'Notifications',

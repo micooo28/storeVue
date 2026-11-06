@@ -50,7 +50,7 @@ const formatCurrency = (amount: number) =>
         </div>
 
         <!-- Balance -->
-        <div class="bg-gradient-to-r from-indigo-700 to-blue-600
+        <div class="bg-gradient-to-red from-indigo-700 to-blue-600
                     rounded-2xl p-8 text-white shadow-lg mb-8">
 
             <p class="text-indigo-100 text-sm">

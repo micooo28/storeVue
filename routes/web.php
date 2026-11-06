@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerRegistrationController;
+use App\Http\Controllers\CustomerTableController;
+use App\Http\Controllers\EmploymentController;
 use App\Models\CustomerInfo;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,11 +18,11 @@ Route::post('/customer/orders', [OrderController::class, 'store'])
     ->name('orders.store');
 
 Route::get('/orders', [OrderController::class, 'index'])
-    ->name('customer.test');
+    ->name('customer.order');
 
-//~~~~~~~~~~~~~~~~~~Fetching-Details~~~~~~~~~~~~~~~~~~~~~~~~~~~>
-
-//Fetching the Employee information as a Summary
+//   Fetching for Customer Table
+Route::get('/customerlist', [CustomerTableController::class,'index', EmploymentController::class, 'index'])
+    ->name('table');
 
 
 
@@ -34,9 +36,9 @@ Route::get('/customer/register', function () {
 })->name('customer.register');
 
 //Customer Table Summary Page
-Route::get('/customerlist', function () {
-    return Inertia::render('customer/Customertable');
-})->name('customerlist');
+// Route::get('/customerlist', function () {
+//     return Inertia::render('customer/Customertable');
+// })->name('customerlist');
 
 //Main Dashboard of Admin
 Route::get('/here', function () {
