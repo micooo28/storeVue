@@ -75,11 +75,6 @@ class CustomerTableController extends Controller
             'e.employer_name'
         )
         ->get();
-        // $sorted_total = CustomerInfo::select(
-        //     'employer',
-        // )->distinct()->get()
-        // ->map(funtion ($employer_sorted_total))->sum('');
-        
 
     return Inertia::render('customer/Customertable', [
         'employee' => $employee,

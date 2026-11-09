@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\CustomerFullListController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerRegistrationController;
 use App\Http\Controllers\CustomerTableController;
@@ -24,6 +26,8 @@ Route::get('/orders', [OrderController::class, 'index'])
 Route::get('/customerlist', [CustomerTableController::class,'index', EmploymentController::class, 'index'])
     ->name('table');
 
+Route::get('/employeeList', [CustomerFullListController::class,'index'])
+    ->name('fullList');
 
 
     

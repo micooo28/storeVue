@@ -75,6 +75,14 @@ const createCustomer = ref<employee | null>(null)
 function addCustomer() {
     router.visit('/customer/register')
 }
+
+function full_list(employer: number){
+    router.visit('/employeeList', {
+         data: {
+            employer: employer
+        },
+    })
+}
 </script>
 
 <template>
@@ -126,6 +134,7 @@ function addCustomer() {
             </div>
             <div 
                 v-for="emp_count in items"
+                @click="full_list(emp_count.employer)"
                 class="bg-gray-900  p-6 rounded-xl shadow-sm">
                     <p>
                     {{ emp_count.employer_name }}
