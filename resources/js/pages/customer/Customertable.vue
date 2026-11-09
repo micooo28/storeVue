@@ -16,18 +16,18 @@ interface employee {
     initial_amount: number;
 }
 
-interface employment{
+interface items{
+    customer_id:number
     employer: number;
     employer_name: string;
+    total_amount: number
 }
 
 
 const props = defineProps<{
     employee: employee[];
-    employment:employment[];
+    items: items[];
 }>();
-console.log(props.employment)
-
 
 const search = ref('')
 
@@ -52,6 +52,11 @@ const totalCredits = computed(() => {
         0
     )
 })
+
+function customerCountByEmployer(employerId: number) {
+    return props.employee.filter(customer => customer.employer === employerId).length
+}
+
 const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
@@ -120,16 +125,17 @@ function addCustomer() {
                 </h2>
             </div>
             <div 
+                v-for="emp_count in items"
                 class="bg-gray-900  p-6 rounded-xl shadow-sm">
                     <p>
-                    Powerzone
+                    {{ emp_count.employer_name }}
                 </p>
                 <p class="text-sm">
-                    Total Customer: {{ props.employee.length }}
+                    Total Customer: {{ customerCountByEmployer(emp_count.employer) }}
                 </p>
 
                 <h2 class="text-3xl font-bold text-indigo-600 mt-2">
-                   {{ formatCurrency(totalCredits) }}
+                    {{ formatCurrency(emp_count.total_amount) }} 
                 </h2>
             </div>
         </div>
@@ -242,7 +248,7 @@ function addCustomer() {
             <!-- Footer -->
             <div class="p-5 border-t-gray-100 text-sm text-slate-500">
                 Showing {{ filteredCustomers.length }} of
-                <!-- {{ employee.length }} customers -->
+                {{ props.employee.length }} customers
             </div>
 
         </div>

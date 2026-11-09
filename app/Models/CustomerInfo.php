@@ -35,5 +35,13 @@ class CustomerInfo extends Model
             'address_id', #this is the primary key
         );
     }
+
+        public function employment(){
+        return $this->belongsTo(
+            EmploymentModel:: class,
+            'employment', #this is the foreign key
+            'employment', #this is the primary key
+        );
+    }
     public $timestamps = false;
 }
