@@ -6,7 +6,7 @@ const selectedCustomer = ref<customers | null>(null);
 const showModal = ref(false);
 
 function viewCustomer(customer: customers) {
-    selectedCustomer.value = customer;
+    selectedCustomer.value = customer
     showModal.value = true;
 }
 
@@ -24,6 +24,11 @@ interface customers{
     employer: number
     employer_name: string
     total_amount: number
+    item_id: number
+    item_name:string
+    quantity:number
+    amount:number
+    date_created:Date
 }
 
 const props = defineProps<{
@@ -116,7 +121,7 @@ const formatCurrency = (amount: number) => {
             </div>
 <CustomerProfile
     v-if="showModal"
-    :customer="selectedCustomer"
+    :customer.value = selectedCustomer
     @close="closeModal"
 />
 </template>
