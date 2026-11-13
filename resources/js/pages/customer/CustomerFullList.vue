@@ -10,6 +10,8 @@ function viewCustomer(customer: customers) {
     showModal.value = true;
 }
 
+
+
 function closeModal() {
     showModal.value = false;
     selectedCustomer.value = null;
@@ -41,12 +43,6 @@ const formatCurrency = (amount: number) => {
         currency: 'PHP'
     }).format(amount)
 }
-
-// const selectedCustomer = ref<customers | null>(null);
-
-// function viewCustomer(customer: customers) {
-//     selectedCustomer.value = customer
-// }
 
 </script>
 <template>
@@ -91,7 +87,7 @@ const formatCurrency = (amount: number) => {
 
                             <td class="px-6 py-4 text-right
                                        font-bold text-slate-500">
-                                {{ formatCurrency(customer.total_amount) }}
+                                       {{ formatCurrency(customer.total_amount) }}
                             </td>
 
                             <td class="px-6 py-4 text-center">

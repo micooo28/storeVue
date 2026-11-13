@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerRegistrationController;
 use App\Http\Controllers\CustomerTableController;
 use App\Http\Controllers\EmploymentController;
+use App\Http\Controllers\PaymentController;
 use App\Models\CustomerInfo;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,6 +29,9 @@ Route::get('/customerlist', [CustomerTableController::class,'index', EmploymentC
 
 Route::get('/employeeList', [CustomerFullListController::class,'index'])
     ->name('fullList');
+
+Route::post('/payment', [PaymentController::class,'store'])
+    ->name('payment.store');
 
 
     

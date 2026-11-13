@@ -1,17 +1,46 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import PaymentPage from './PaymentPage.vue';
+import { computed, ref } from 'vue'
+import PaymentPage from '@/components/customer/PaymentPage.vue';
+import PaymentList from '@/components/customer/PaymentList.vue';
 
-const selectedCustomer = ref<null>(null);
-const showPayment = ref(false);
-
-function openPayment() {
-    showPayment.value = true;
+interface customers{
+    customer_id: number
+    customer_fname:string
+    customer_lname:string
+    total: number
+    contact_no: string
+    employer: number
+    employer_name: string
+    total_amount: number
+    item_id: number
+    item_name:string
+    quantity:number
+    amount:number
+    date_created:Date
+    pay_method: string
+    payment_amount: number
+    date: Date
+    payment_total:number
 }
 
+const customerInfo = ref<customers | null>(null);
+const showPayment = ref(false);
+const showPaymentList = ref(false);
+
+function openPaymentList(payment: customers) {
+    customerInfo.value = payment
+    showPaymentList.value = true;
+}
+
+function openPayment(customer: customers) {
+    customerInfo.value = customer
+    showPayment.value = true;
+}
 function closePayment() {
     showPayment.value = false;
-    selectedCustomer.value = null;
+}
+function closePaymentList() {
+    showPaymentList.value = false;
 }
 
 const props = defineProps<{
@@ -21,6 +50,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     close: [];
 }>();
+
 const formatCurrency = (total: number) => {
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
@@ -61,7 +91,9 @@ function saveEdit(item: any) {
     console.log(saveEdit)
 }
 
-
+const unpaidItems = computed(() =>
+    props.customer.items.filter((item: any) => Number(item.total) > 0)
+);
 </script>
 <template>
             <div
@@ -109,13 +141,13 @@ function saveEdit(item: any) {
                     </thead>
 
                     <tbody>
+        
 
 <tr
-    v-for="item in customer.items"
+    v-for="item in unpaidItems"
     :key="item.item_id"
     class="border-t border-gray-200 hover:bg-slate-50 transition"
 >
-
     <!-- ITEM NAME -->
     <td class="p-5">
 
@@ -174,7 +206,6 @@ function saveEdit(item: any) {
             step="0.01"
             class="border rounded-lg px-3 py-2 w-32"
         />
-
         <span v-else>
             {{ formatCurrency(item.total) }}
         </span>
@@ -220,13 +251,12 @@ function saveEdit(item: any) {
         </button>
 
     </td>
-
 </tr>
                         <tr>
-                            <td v-if="customer.items == null"
+                            <td v-if="props.customer.items == 0"
                                 colspan="5"
                                 class="text-center py-10 text-slate-400">
-                                No customers found.
+                                No Credit.
                             </td>
                         </tr>
 
@@ -249,11 +279,18 @@ function saveEdit(item: any) {
             {{ formatCurrency(customer.total_amount) }}
         </h2>
         <button
-            @click="openPayment"
+            @click="openPayment(customer)"
             class="w-full mt-2 bg-green-400 text-white
             rounded-lg py-3 hover:bg-green-500"
         >
             Pay Credit
+        </button>
+         <button
+            @click="openPaymentList(customer)"
+            class="w-full mt-2 bg-slate-800 text-white
+            rounded-lg py-3 hover:bg-slate-900"
+        >
+            Payment Records
         </button>
     </div>
 
@@ -261,8 +298,8 @@ function saveEdit(item: any) {
 
                 <button
                     @click="emit('close')"
-                    class="w-full mt-6 bg-slate-900 text-white
-                           rounded-lg py-3 hover:bg-slate-800"
+                    class="w-full bg-red-500 text-white
+                           rounded-lg py-3 hover:bg-red-600"
                 >
                     Close
                 </button>
@@ -271,7 +308,13 @@ function saveEdit(item: any) {
         </div>
 <PaymentPage
     v-if="showPayment"
-    :show-payment="showPayment"
+    :customer.value = customerInfo
     @close-payment="closePayment"
+/>
+
+<PaymentList
+v-if="showPaymentList"
+:customer.value= customerInfo
+@close-payment = "closePaymentList"
 />
 </template>
